@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-md-4 text-center">
+        <h2>{{ movie.name }}</h2>
+        <img src="/static/{{ movie.poster }}" style="max-width:100%; max-height:100%; margin:auto; display:block;"></img>
+    </div>
+
+    <div class="col-md-8">
+        <h3>overview</h3>
+        <div>{{ movie.overview }}</div>
+
+        <h3>tagline</h3>
+        <div>{{ movie.tagline }}</div>
+
+        <h3>state</h3>
+        <div>{{ movie.state }}</div>
+
+        <h3>runtime</h3>
+        <div>{{ movie.runtiem }}</div>
+
+        <h3>revenue</h3>
+        <div>{{ movie.revenue }}</div>
+
+        <h3>budget</h3>
+        <div>{{ movie.budget }}</div>
+
+        <h3>genres</h3>
+        {% for genre in movie.genres.all %}
+        <div>{{ genre }}</div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+from django.db import models
+from moviedb import MovieDB
+
+
+class RecommendationManager(models.Manager):
+
+    def create_from_movie(self, movie):
+        from movies.models import Movie
+
+        mdb = MovieDB()
+        recommendations = mdb.get_similar_movies(movie)
+        for recommendation in recommendations['results']:
+
+            # create recommended movie
+            print "%s recommends %s" % (movie.name, recommendation['title'])
+            recommended_moviedb_id = recommendation['id']
+            recommended_moviedb_title = recommendation['title']
+            recommended_movie, created = Movie.objects.create_from_moviedb_id(recommended_moviedb_id, recommended_moviedb_title, "", "recommended")
+            movie.recommendations.add(recommended_movie)
+
+            # create recommendation assosiations
+            self.create_from_moviedb_info(based_on_movie=movie, recommended_movie=recommended_movie, details=recommendation)
+
+        Movie.objects.get_poster(movie, "w342")
+        movie.save()
+
+    def create_from_moviedb_info(self, based_on_movie, recommended_movie, details):
+        Recommendation.objects.get_or_create(
+            based_on_movie=based_on_movie,
+            recommended_movie=recommended_movie,
+            recommended_id=details['id'],
+            poster_path=details['poster_path'],
+            release_date=details['release_date'],
+            title=details['title'],
+            vote_average=details['vote_average'],
+            vote_count=details['vote_count'],
+            popularity=details['popularity'],
+        )
+
+
+class Recommendation(models.Model):
+    based_on_movie = models.ForeignKey('Movie', related_name='+')
+    recommended_movie = models.ForeignKey('Movie', null=True, blank=True, related_name='+')
+
+    recommended_id = models.CharField(null=True, blank=True, max_length=200)
+    poster_path = models.CharField(null=True, blank=True, max_length=200)
+    release_date = models.CharField(null=True, blank=True, max_length=200)
+    title = models.CharField(null=True, blank=True, max_length=200)
+    vote_average = models.FloatField()
+    vote_count = models.IntegerField()
+    popularity = models.FloatField()
+
+    def __unicode__(self):
+        return self.title
+
+    class Meta:
+        app_label = 'movies'
+
+    objects = RecommendationManager()

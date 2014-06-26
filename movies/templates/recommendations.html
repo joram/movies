@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    {% for recommendation in movies %}
+    <a href="{% url "movies.views.movie.movie" recommendation.movie.moviedb_id %}">
+    <div class="col-md-3" style="margin-top: 3px;" id="{{ forloop.counter0 }}_{{ recommendation.movie.name }}">
+        {% include '_gridview_movie.html' with movie=recommendation.movie %}
+    </div>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}
