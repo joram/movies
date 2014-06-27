@@ -6,10 +6,13 @@ from movies.models import Genre, Movie
 def genres(request):
     genres = Genre.objects.all()
     for genre in genres:
-        movies = Movie.objects.filter(genres=genre).exclude(posters=None)
-        print movies
+        movies = Movie.objects.filter(genres=genre)
         if movies:
             movie = random.choice(movies)
+            while not movie.poster and movies.count() > 1:
+                print "no image for %s" % movie
+                movies = movies.exclude(id=movie.id)
+                movie = random.choice(movies)
             genre.movie = movie
 
     context = {'page': 'genres',
@@ -20,7 +23,7 @@ def genres(request):
 
 def genre(request, genre_id):
     genre = Genre.objects.get(moviedb_id=genre_id)
-    movies = Movie.objects.filter(genres=genre).exclude(posters=None)
+    movies = Movie.objects.filter(genres=genre)
 
     context = {
         'page': 'genres',

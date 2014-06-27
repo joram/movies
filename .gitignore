@@ -1,5 +1,8 @@
 *.pyc
 *.sqlite3
+.idea*
 data/*
+tmp/*
+media/*
 common/static/*
 

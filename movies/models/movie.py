@@ -1,10 +1,12 @@
 import os, json
 
+from django.conf import settings
 from django.db import models
 from country import *
 from company import *
 from genre import *
 from language import *
+from movie_image_map import MovieImageMap
 from recommendation import Recommendation
 from common.models.image import Image
 
@@ -21,11 +23,16 @@ class MovieManager(models.Manager):
     def create_from_filepath(self, filepath, state="available"):
 
         path, filename = os.path.split(filepath)
-        movie_name = self.mdb.filename_to_title(filename).replace(".mp4", "")
+        movie_name = self.mdb.filename_to_title(filename)
         movie_year = self.mdb.filename_to_year(filename)
         moviedb_id = self.mdb.get_id(movie_name, movie_year)
+        print moviedb_id
+        print movie_name
+        print movie_year
         if moviedb_id != -1:
-            return self.create_from_moviedb_id(moviedb_id, movie_name, filename, state)
+            movie, created = self.create_from_moviedb_id(moviedb_id, movie_name, filename, state)
+            movie.get_poster()
+            return movie, created
         return None, False
 
     def create_from_moviedb_id(self, moviedb_id=None, movie_name="", filename="", state="available"):
@@ -79,43 +86,8 @@ class MovieManager(models.Manager):
             g, _ = Genre.objects.get_or_create(moviedb_id=int(genre['id']), name= genre['name'])
             movie.genres.add(g)
 
-        self.get_poster(movie)
         movie.save()
         return movie, True
-
-    def get_poster(self, movie, image_size="w92"):
-        """
-        poster sizes include: w92, w154, w185, w342, w500, w780, original
-        """
-        mdb = MovieDB()
-        images = mdb.get_image_list(movie.moviedb_id)
-        config = mdb.get_configuration()
-
-        poster_directory = "./common/static/images/poster/%s" % image_size
-        if not os.path.exists(poster_directory):
-            os.makedirs(poster_directory)
-
-        posters = images.get('posters')
-        if posters and len(posters):
-            image = posters[0]
-            language = image['iso_639_1']
-            if language == "en":
-                url = "%s%s%s" % (config['images']['base_url'], image_size, image['file_path'])
-                filename = "moviedb_%s_poster_%s.jpg" % (movie.moviedb_id, images['posters'].index(image))
-                storage_path = "%s/%s" % (poster_directory, filename)
-                static_path = "images/poster/%s/%s" % (image_size, filename)
-                Image.objects.get_image(storage_path, url)
-
-                image = Image.objects.create(
-                    filepath=static_path,
-                    type='poster',
-                    size=image_size)
-
-                if not movie.default_poster:
-                    movie.default_poster = image
-
-                movie.posters.add(image)
-                movie.save()
 
     def get_recommendations(self, movie):
         return Recommendation.objects.create_from_movie(movie)
@@ -143,13 +115,6 @@ class MovieManager(models.Manager):
 class Movie(models.Model):
     name = models.CharField(null=True, blank=True, max_length=200)
     filename = models.CharField(null=True, blank=True, max_length=200)
-    poster = models.ForeignKey('Image', null=True, blank=True, related_name='+')
-    
-    default_poster = models.ForeignKey('Image', null=True, blank=True, related_name='poster')
-    default_background = models.ForeignKey('Image', null=True, blank=True, related_name='background')
-    posters = models.ManyToManyField('Image', null=True, blank=True, related_name='posters')
-    backgrounds = models.ManyToManyField('Image', null=True, blank=True, related_name='backgrounds')
-
 
     moviedb_id = models.CharField(null=True, blank=True, max_length=200)
     imdb_id = models.CharField(null=True, blank=True, max_length=200)
@@ -175,11 +140,41 @@ class Movie(models.Model):
     objects = MovieManager()
 
     @property
-    def poster(self, poster_size="w342"):
-        for poster in self.posters.all():
-            if poster.size == poster_size:
-                return poster.filepath
-        return ""
+    def images(self):
+        image_ids = [mimap.image.id for mimap in MovieImageMap.objects.filter(movie=self)]
+        return Image.objects.filter(id__in=image_ids)
+
+    @property
+    def poster(self):
+        images = self.images.filter(size=settings.DEFAULT_THUMBNAIL_SIZE)
+        if images.count() >= 1:
+            return images[0]
+        return None
+
+    def get_poster(self, image_size=settings.DEFAULT_THUMBNAIL_SIZE):
+        """
+        poster sizes include: w92, w154, w185, w342, w500, w780, original
+        """
+        mdb = MovieDB()
+        images = mdb.get_image_list(self.moviedb_id)
+        config = mdb.get_configuration()
+
+        posters = images.get('posters')
+        print posters
+        for poster in posters:
+            if posters and len(posters):
+                language = poster['iso_639_1']
+                if language == "en":
+
+                    url = "%s%s%s" % (config['images']['base_url'], image_size, poster['file_path'])
+                    filename = "moviedb_%s_poster_%s.jpg" % (self.moviedb_id, images['posters'].index(poster))
+                    image = Image.objects.create(
+                        image_type='poster',
+                        size=image_size,
+                        image_url=url,
+                        filename=filename)
+                    MovieImageMap.objects.create(movie=self, image=image)
+                    return
 
     class Meta:
         app_label = 'movies'
