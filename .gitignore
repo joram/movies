@@ -4,5 +4,6 @@
 data/*
 tmp/*
 media/*
+static/*
 common/static/*
 

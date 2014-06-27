@@ -4,7 +4,7 @@ import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 PROJECT_ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
-MOVIE_ROOT = "/mnt/silvia/video/Movies/"
+MOVIE_ROOT = "/home/joram/Desktop/Movies/"
 
 MOVIEDB_API_KEY = "284cc006f434d590f86b7f10babb5ed8"
 MOVIEDB_WAIT_TIME = 0.5

@@ -34,11 +34,13 @@ def rebuild(request):
     files = _files_in_dir(settings.MOVIE_ROOT, ignore_paths=[os.path.join(settings.MOVIE_ROOT, "Backup")])
     log = open('errors.log', 'w')
     for fullpath in files:
-#    for fullpath in ["/mnt/silvia/video/Movies/Airplane Top Secret.avi"]:
         movie, created = Movie.objects.create_from_filepath(fullpath)
         if movie:
             collection.add_movie(movie)
-            print "%s %s" % (fullpath.ljust(70), movie.name)
+            try:
+                print "%s %s" % (fullpath.ljust(70), movie.name)
+            except:
+                pass
         else:
             log.write("ERROR!!!: %s\n" % fullpath)
             log.flush()
