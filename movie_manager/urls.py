@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^genre/(?P<genre_id>[0-9]+)/$', 'movies.views.genres.genre', name='genre'),
     url(r'^movie/(?P<movie_id>[0-9]+)/$', 'movies.views.movie.movie', name='movie'),
     url(r'^movies/rebuild/$', 'movies.views.tools.rebuild', name='rebuild'),
+    url(r'^movies/add_movie/$', 'movies.views.tools.add_movie', name='add_movie'),
 
     # url(r'^movie_manager/', include('movie_manager.foo.urls')),
 

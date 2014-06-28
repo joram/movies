@@ -21,18 +21,15 @@ class MovieManager(models.Manager):
         self.mdb = MovieDB()
 
     def create_from_filepath(self, filepath, state="available"):
-
-        path, filename = os.path.split(filepath)
-        movie_name = self.mdb.filename_to_title(filename)
-        movie_year = self.mdb.filename_to_year(filename)
-        moviedb_id = self.mdb.get_id(movie_name, movie_year)
-        print moviedb_id
-        print movie_name
-        print movie_year
-        if moviedb_id != -1:
-            movie, created = self.create_from_moviedb_id(moviedb_id, movie_name, filename, state)
-            movie.get_poster()
-            return movie, created
+        if filepath:
+            path, filename = os.path.split(filepath)
+            movie_name = self.mdb.filename_to_title(filename)
+            movie_year = self.mdb.filename_to_year(filename)
+            moviedb_id = self.mdb.get_id(movie_name, movie_year)
+            if moviedb_id != -1:
+                movie, created = self.create_from_moviedb_id(moviedb_id, movie_name, filename, state)
+                movie.get_poster()
+                return movie, created
         return None, False
 
     def create_from_moviedb_id(self, moviedb_id=None, movie_name="", filename="", state="available"):
@@ -160,7 +157,6 @@ class Movie(models.Model):
         config = mdb.get_configuration()
 
         posters = images.get('posters')
-        print posters
         for poster in posters:
             if posters and len(posters):
                 language = poster['iso_639_1']

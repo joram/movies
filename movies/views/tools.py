@@ -1,7 +1,8 @@
-import os
+import os, json
 
 from django.conf import settings
 from django.shortcuts import render_to_response
+from django.views.decorators.csrf import csrf_exempt
 
 from common.models import Image
 from movies.models import Movie, Collection
@@ -32,19 +33,17 @@ def rebuild(request):
 
     collection = Collection.objects.create(name="Initial Collection")
     files = _files_in_dir(settings.MOVIE_ROOT, ignore_paths=[os.path.join(settings.MOVIE_ROOT, "Backup")])
-    log = open('errors.log', 'w')
-    for fullpath in files:
-        movie, created = Movie.objects.create_from_filepath(fullpath)
-        if movie:
-            collection.add_movie(movie)
-            try:
-                print "%s %s" % (fullpath.ljust(70), movie.name)
-            except:
-                pass
-        else:
-            log.write("ERROR!!!: %s\n" % fullpath)
-            log.flush()
+    context = {'page': 'tools',
+               'filenames': files,
+               'collection': collection}
+    return render_to_response('tools/rebuild.html', context)
 
-    context = {'page': 'home',
-               'movies': Movie.objects.all()}
-    return render_to_response('tools/scan.html', context)
+
+@csrf_exempt
+def add_movie(request):
+    filename = request.POST.get('filename')
+    movie, created = Movie.objects.create_from_filepath(filename)
+    context = {'movie': movie}
+    response = render_to_response('tools/add_movie.html', context)
+    print type(response)
+    return response
