@@ -25,28 +25,48 @@
 </div>
 
 <script type=text/javascript>
+    function get_single_recommendation(movie_id, recommendation_id){
+        url = '{% url "movies.views.tools.get_single_recommendation" %}';
+        data = {movie_id: movie_id, recommended_id: recommendation_id};
+        function success(data){
+            movie_row = $('tr[data_movieid='+movie_id+"]");
+            if(data=="True"){
+                have_count = parseInt(movie_row.find("td.have").text());
+                movie_row.find("td.have").text(parseInt(have_count+1));
+            } else {
+                new_count = parseInt(movie_row.find("td.new").text());
+                movie_row.find("td.new").text(parseInt(new_count+1));
+            }
+        }
+
+        $.ajax({
+          type: "POST",
+          url: url,
+          data: data,
+          success: success,
+          async: false
+        });
+    }
 
     function get_recommendations(id){
         movie = $('tr#movie_'+id);
         movie_id = movie.attr('data_movieid');
         movie_name = movie.filter('td.name').text;
-        console.log(movie_id+" "+movie_name);
+        $.post('{% url "movies.views.tools.get_recommendation_list" %}', {movie_id: movie_id}).done(
+            function(data){
+                data = JSON.parse(data);
+                $('tr#movie_'+id+"> td.total").text(data.length);
+                $('tr#movie_'+id+"> td.new").text(0);
+                $('tr#movie_'+id+"> td.have").text(0);
+                for (i = 0; i < data.length; i++) {
+                    get_single_recommendation(movie_id, data[i]);
+                }
 
-        $.post('{% url "movies.views.tools.get_recommendations" %}', {movie_id: movie_id}).done(
-           function(data){
-            var status = $('tr#movie_'+id+"> .status");
-            status.removeClass("btn-info");
-            if(data==""){
-                status.addClass("btn-error glyphicon-remove");
-                console.log(filename);
-            } else {
-                status.addClass("btn-success glyphicon-ok");
+                id++;
+                if($('tr#movie_'+id)){
+                    get_recommendations(id);
+                }
             }
-            next_id = id+1;
-            if($('tr#movie_'+next_id)){
-              get_recommendations(id+1);
-            }
-          }
         );
     }
     get_recommendations(0);

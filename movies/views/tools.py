@@ -28,7 +28,8 @@ def _files_in_dir(path, file_types=['.avi', '.mp4'], ignore_paths=[]):
 
 def rebuild(request):
     Movie.objects.all().delete()
-    Image.objects.all().delete()
+    for image in Image.objects.all():
+        image.delete()
     Collection.objects.all().delete()
     return rescan(request)
 
@@ -49,20 +50,33 @@ def rebuild_recommendations(request):
     recommended_movies.delete()
 
     context = {'page': 'tools',
-               'movies': collection.movies,
+               'movies': collection.movies.order_by('name'),
                'collection': collection}
     return render_to_response('tools/rebuild_recommendations.html', context)
 
 
 @csrf_exempt
-def get_recommendations(request):
+def get_recommendation_list(request):
     movie_id = request.POST.get('movie_id')
     movie = Movie.objects.get(id=movie_id)
-    movie.get_recommendations()
-    context = {'movie': movie}
-    response = render_to_response('tools/get_recommendations.html', context)
+    context = {'recommendations': [r['id'] for r in movie.get_recommendation_list()]}
+    response = render_to_response('tools/recommendation_list.html', context)
     return response
 
+@csrf_exempt
+def get_single_recommendation(request):
+    movie_id = request.POST.get('movie_id')
+    recommended_id = request.POST.get('recommended_id')
+    movie = Recommendation.objects.create_from_id(movie_id, recommended_id)
+    have = False
+    if movie:
+        collection, _ = Collection.objects.get_or_create(name="Initial Collection")
+        if movie in collection.movies:
+            have = True
+
+    context = {'have': have}
+    response = render_to_response('tools/get_single_recommendation.html', context)
+    return response
 
 @csrf_exempt
 def add_movie(request):

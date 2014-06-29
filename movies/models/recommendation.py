@@ -4,23 +4,25 @@ from moviedb import MovieDB
 
 class RecommendationManager(models.Manager):
 
-    def create_from_movie(self, movie):
+    def create_from_id(self, movie_id, recommended_id):
         from movies.models import Movie
 
+        if Movie.objects.filter(id=recommended_id).exists():
+            recommended_movie = Movie.objects.get(id=recommended_id)
+            return recommended_movie
+
         mdb = MovieDB()
-        recommendations = mdb.get_similar_movies(movie)
-        for recommendation in recommendations['results']:
+        movie = Movie.objects.get(id=movie_id)
+        details = mdb.get_movie_details_by_id(recommended_id)
+        recommended_movie, created = Movie.objects.create_from_moviedb_id(recommended_id,  details['title'], "", "recommended")
 
-            # create recommended movie
-            print "%s recommends %s" % (movie.name, recommendation['title'])
-            recommended_moviedb_id = recommendation['id']
-            recommended_moviedb_title = recommendation['title']
-            recommended_movie, created = Movie.objects.create_from_moviedb_id(recommended_moviedb_id, recommended_moviedb_title, "", "recommended")
+        # create recommendation assosiations
+        self.create_from_moviedb_info(
+            based_on_movie=movie,
+            recommended_movie=recommended_movie,
+            details=details)
 
-            # create recommendation assosiations
-            self.create_from_moviedb_info(based_on_movie=movie, recommended_movie=recommended_movie, details=recommendation)
-
-        movie.save()
+        return recommended_movie
 
     def create_from_moviedb_info(self, based_on_movie, recommended_movie, details):
         Recommendation.objects.get_or_create(

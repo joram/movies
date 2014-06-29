@@ -101,7 +101,6 @@ class MovieDB():
         name = self.title_to_filename(name)
         movie_id = self.get_id(name)
 
-
     def get_movie_details_by_id(self, movie_id):
         stored_filename = "./data/moviedb_details_%s.json" % movie_id
         query_url = "http://api.themoviedb.org/3/movie/%s?api_key=%s" % (movie_id, settings.MOVIEDB_API_KEY)

@@ -36,8 +36,14 @@
 
 </div>
 <div class="row">
-    <div class="col-md-12">
-        {% include "_recommendations.html" %}
-    </div>
+    {% if movie.state == "recommended" %}
+        <div class="col-md-12 text-center"><h2>
+            <a class="btn btn-default" href="{% url 'movies.views.download.download' movie.moviedb_id %}">Download</a>
+        </h2></div>
+    {% else %}
+        <div class="col-md-12">
+            {% include "_recommendations.html" %}
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

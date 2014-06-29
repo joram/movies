@@ -154,6 +154,10 @@ class Movie(models.Model):
     def get_recommendations(self):
         return Recommendation.objects.create_from_movie(self)
 
+    def get_recommendation_list(self):
+        mdb = MovieDB()
+        return mdb.get_similar_movies(self)['results']
+
     def get_poster(self, image_size=settings.DEFAULT_THUMBNAIL_SIZE):
         """
         poster sizes include: w92, w154, w185, w342, w500, w780, original

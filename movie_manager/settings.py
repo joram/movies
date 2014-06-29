@@ -6,6 +6,12 @@ TEMPLATE_DEBUG = DEBUG
 PROJECT_ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
 MOVIE_ROOT = "/home/joram/Desktop/Movies/"
 
+TRANSMISSION_ADDRESS = ""
+TRANSMISSION_PORT = ""
+TRANSMISSION_USERNAME = ""
+TRANSMISSION_PASSWORD = ""
+TRANSMISSION_DOWNLOAD_DIR = ""
+
 MOVIEDB_API_KEY = "284cc006f434d590f86b7f10babb5ed8"
 MOVIEDB_WAIT_TIME = 0.5
 

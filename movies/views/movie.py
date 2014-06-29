@@ -3,7 +3,10 @@ from movies.models import Movie
 
 
 def movie(request, movie_id):
-    movie = Movie.objects.get(moviedb_id=movie_id)
+    try:
+        movie = Movie.objects.get(moviedb_id=movie_id)
+    except:
+        movie = None
     context = {'movie': movie}
     return render_to_response('movie.html', context)
 
