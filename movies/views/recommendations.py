@@ -1,14 +1,11 @@
 from django.shortcuts import render_to_response
-from movies.models import Movie, Recommendation
+from movies.models import Movie, Recommendation, Collection
 
 
 def recommendations(request):
-    movies = Movie.objects.get_recommendations_based_on_movies(Movie.objects.all())
-    movies = movies[:30]
-    for rec in movies:
-        movie = rec['movie']
-        Movie.objects.get_poster(movie, "w342")
 
-    context = {'movies': movies}
+    collection, _ = Collection.objects.get_or_create(name="Initial Collection")
+    recommended_movies = Movie.objects.all().exclude(id__in=[m.id for m in collection.movies])
+    context = {'movies': recommended_movies[:30]}
     return render_to_response('recommendations.html', context)
 

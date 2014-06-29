@@ -20,7 +20,7 @@ class MovieManager(models.Manager):
         super(MovieManager, self).__init__()
         self.mdb = MovieDB()
 
-    def create_from_filepath(self, filepath, state="available"):
+    def get_or_create_from_filepath(self, filepath, state="available"):
         if filepath:
             path, filename = os.path.split(filepath)
             movie_name = self.mdb.filename_to_title(filename)
@@ -83,11 +83,9 @@ class MovieManager(models.Manager):
             g, _ = Genre.objects.get_or_create(moviedb_id=int(genre['id']), name= genre['name'])
             movie.genres.add(g)
 
+        movie.get_poster()
         movie.save()
         return movie, True
-
-    def get_recommendations(self, movie):
-        return Recommendation.objects.create_from_movie(movie)
 
     def get_recommendations_based_on_movies(self, movies_qs, ignore_available=True):
         recommendations = Recommendation.objects.filter(based_on_movie__in=movies_qs)
@@ -148,6 +146,14 @@ class Movie(models.Model):
             return images[0]
         return None
 
+    @property
+    def recommendations(self):
+        movie_ids = [r.recommended_movie.id for r in Recommendation.objects.filter(based_on_movie=self)]
+        return Movie.objects.filter(id__in=movie_ids)
+
+    def get_recommendations(self):
+        return Recommendation.objects.create_from_movie(self)
+
     def get_poster(self, image_size=settings.DEFAULT_THUMBNAIL_SIZE):
         """
         poster sizes include: w92, w154, w185, w342, w500, w780, original
@@ -155,8 +161,8 @@ class Movie(models.Model):
         mdb = MovieDB()
         images = mdb.get_image_list(self.moviedb_id)
         config = mdb.get_configuration()
-
         posters = images.get('posters')
+
         for poster in posters:
             if posters and len(posters):
                 language = poster['iso_639_1']
@@ -171,6 +177,21 @@ class Movie(models.Model):
                         filename=filename)
                     MovieImageMap.objects.create(movie=self, image=image)
                     return
+
+        for poster in posters:
+            if posters and len(posters):
+                url = "%s%s%s" % (config['images']['base_url'], image_size, poster['file_path'])
+                filename = "moviedb_%s_poster_%s.jpg" % (self.moviedb_id, images['posters'].index(poster))
+                image = Image.objects.create(
+                    image_type='poster',
+                    size=image_size,
+                    image_url=url,
+                    filename=filename)
+                MovieImageMap.objects.create(movie=self, image=image)
+                return
+
+        print "no poster for: %s" % self.name
+        print posters
 
     class Meta:
         app_label = 'movies'

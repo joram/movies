@@ -5,16 +5,20 @@
     <table class="table" style="margin-top:20px;">
     <thead>
         <tr>
-            <th>Filename</th>
             <th>Movie Name</th>
             <th>Status</th>
+            <th>new</th>
+            <th>have</th>
+            <th>total</th>
         </tr>
     </thead>
-    {% for filename in filenames %}
-        <tr id="movie_{{ forloop.counter0 }}">
-            <td class="filename">{{ filename }}</td>
-            <td class="name">?</td>
+    {% for movie in movies %}
+        <tr id="movie_{{ forloop.counter0 }}" data_movieid="{{ movie.id }}">
+            <td class="name">{{ movie.name }}</td>
             <td class="status btn btn-lg btn-info glyphicon glyphicon-minus"></td>
+            <td class="new">?</td>
+            <td class="have">?</td>
+            <td class="total">?</td>
         </tr>
     {% endfor %}
     </table>
@@ -22,10 +26,13 @@
 
 <script type=text/javascript>
 
-    filenames = {{ filenames|safe }};
-    function scan_file(id){
-        filename = filenames[id];
-        $.post('{% url "movies.views.tools.add_movie" %}', {filename: filename}).done(
+    function get_recommendations(id){
+        movie = $('tr#movie_'+id);
+        movie_id = movie.attr('data_movieid');
+        movie_name = movie.filter('td.name').text;
+        console.log(movie_id+" "+movie_name);
+
+        $.post('{% url "movies.views.tools.get_recommendations" %}', {movie_id: movie_id}).done(
            function(data){
             var status = $('tr#movie_'+id+"> .status");
             status.removeClass("btn-info");
@@ -36,13 +43,13 @@
                 status.addClass("btn-success glyphicon-ok");
             }
             next_id = id+1;
-            if(filenames.length >= next_id){
-              scan_file(id+1);
+            if($('tr#movie_'+next_id)){
+              get_recommendations(id+1);
             }
           }
         );
     }
-    scan_file(0);
+    get_recommendations(0);
 
 </script>
 {% endblock %}

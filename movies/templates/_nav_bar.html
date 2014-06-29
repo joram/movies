@@ -30,6 +30,8 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools<b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li><a href="{% url 'movies.views.tools.rebuild' %}">Rebuild Database</a></li>
+          <li><a href="{% url 'movies.views.tools.rescan' %}">Update Database</a></li>
+          <li><a href="{% url 'movies.views.tools.rebuild_recommendations' %}">Rebuild Recommendations</a></li>
         </ul>
       </li>
       </ul>

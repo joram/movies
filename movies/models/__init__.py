@@ -7,4 +7,5 @@ from movies.models.genre import Genre
 from movies.models.language import Language
 
 from movies.models.recommendation import Recommendation
+from movies.models.movie_collection_map import MovieCollectionMap
 from movies.models.moviedb import MovieDB

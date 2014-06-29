@@ -16,12 +16,10 @@ class RecommendationManager(models.Manager):
             recommended_moviedb_id = recommendation['id']
             recommended_moviedb_title = recommendation['title']
             recommended_movie, created = Movie.objects.create_from_moviedb_id(recommended_moviedb_id, recommended_moviedb_title, "", "recommended")
-            movie.recommendations.add(recommended_movie)
 
             # create recommendation assosiations
             self.create_from_moviedb_info(based_on_movie=movie, recommended_movie=recommended_movie, details=recommendation)
 
-        Movie.objects.get_poster(movie, "w342")
         movie.save()
 
     def create_from_moviedb_info(self, based_on_movie, recommended_movie, details):
