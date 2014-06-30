@@ -3,9 +3,10 @@ from django.conf import settings
 from django.shortcuts import render_to_response
 
 from movies.models import Movie
+import requests
+
 from tpb import TPB, CATEGORIES, ORDERS
 import transmissionrpc
-import requests
 
 
 def _get_torrent(movie, required_likes=2):

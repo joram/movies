@@ -14,15 +14,16 @@ class RecommendationManager(models.Manager):
         mdb = MovieDB()
         movie = Movie.objects.get(id=movie_id)
         details = mdb.get_movie_details_by_id(recommended_id)
-        recommended_movie, created = Movie.objects.create_from_moviedb_id(recommended_id,  details['title'], "", "recommended")
+	if details:
+        	recommended_movie, created = Movie.objects.create_from_moviedb_id(recommended_id,  details.get('title'), "", "recommended")
 
-        # create recommendation assosiations
-        self.create_from_moviedb_info(
-            based_on_movie=movie,
-            recommended_movie=recommended_movie,
-            details=details)
+        	# create recommendation assosiations
+        	self.create_from_moviedb_info(
+        	    based_on_movie=movie,
+        	    recommended_movie=recommended_movie,
+        	    details=details)
 
-        return recommended_movie
+        	return recommended_movie
 
     def create_from_moviedb_info(self, based_on_movie, recommended_movie, details):
         Recommendation.objects.get_or_create(

@@ -65,8 +65,8 @@ def get_recommendation_list(request):
 
 @csrf_exempt
 def get_single_recommendation(request):
-    movie_id = request.POST.get('movie_id')
-    recommended_id = request.POST.get('recommended_id')
+    movie_id = request.POST['movie_id']
+    recommended_id = request.POST['recommended_id']
     movie = Recommendation.objects.create_from_id(movie_id, recommended_id)
     have = False
     if movie:
