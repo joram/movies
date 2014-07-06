@@ -4,8 +4,7 @@
 <div class="row">
     {% for genre in genres %}
     <a href="{% url 'movies.views.genres.genre' genre.moviedb_id %}">
-    <div class="col-md-3" style="margin-top: 3px;" id="{{ forloop.counter0 }}_{{ genre.name }}">
-        {{ genre.name }}
+    <div class="col-md-3" style="margin-top: 10px; margin-bottom:10px;" id="{{ forloop.counter0 }}_{{ genre.name }}">
         {% include '_gridview_genre.html' %}
     </div>
     </a>

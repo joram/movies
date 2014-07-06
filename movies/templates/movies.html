@@ -22,4 +22,10 @@
         <a style="padding:10px; color:darkslategrey;" href="{% url 'movies.views.home.home' %}?page_number={{ i }}">{{ i }}</a>
     {% endfor %}
 </div>
+
+<div class="row">
+  <div class="col-md-12">
+    {% include "_recommendations.html" %}
+  </div>
+</div>
 {% endblock %}

@@ -1,2 +1,8 @@
 {% load static %}
-<img src="{% get_media_prefix %}{{ genre.movie.poster.image }}" style="max-width:100%; max-height:100%; margin:auto; display:block;"></img>
+<section class="" style="border:solid 3px darkslategrey; background-color:lightgrey;">
+    <div style="color:darkslategrey; border-bottom:solid 3px darkslategrey; padding-left:5px; padding-right:5px; width:100%;">
+        <h3 class="text-center elipses" style="width:100%; padding-top:2px;">{{ genre.name }}</h3>
+    </div>
+    <img src="{% get_media_prefix %}{{ genre.movie.poster.image }}" style="max-width:100%; max-height:100%; margin:auto; display:block;"/>
+</section>
+

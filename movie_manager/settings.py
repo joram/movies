@@ -16,6 +16,8 @@ MOVIEDB_API_KEY = "284cc006f434d590f86b7f10babb5ed8"
 MOVIEDB_WAIT_TIME = 0.5
 
 DEFAULT_THUMBNAIL_SIZE = "w342"
+DEFAULT_LIBRARY_NAME = "My Library"
+
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )

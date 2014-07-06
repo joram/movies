@@ -2,12 +2,9 @@
 
 {% block content %}
 <div class="row">
-    {% for movie in movies %}
-    <a href="{% url "movies.views.movie.movie" movie.moviedb_id %}">
-        <div class="col-md-3" style="margin-top: 3px;" id="{{ forloop.counter0 }}_{{ movie.name }}">
-            {% include '_gridview_movie.html' %}
-        </div>
-    </a>
-    {% endfor %}
+    <h2 class="text-center">{{ genre.name }}</h2>
 </div>
+
+{{ rendered_movies }}
+
 {% endblock %}

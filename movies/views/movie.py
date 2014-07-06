@@ -7,6 +7,8 @@ def movie(request, movie_id):
         movie = Movie.objects.get(moviedb_id=movie_id)
     except:
         movie = None
-    context = {'movie': movie}
+    context = {
+        'movie': movie,
+        'recommendations': movie.recommendations}
     return render_to_response('movie.html', context)
 

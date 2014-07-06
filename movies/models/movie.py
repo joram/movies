@@ -145,8 +145,6 @@ class Movie(models.Model):
     production_countries = models.ManyToManyField('Country')
     spoken_languages = models.ManyToManyField('Language')
 
-    recommendations = models.ManyToManyField('Movie', related_name='++')
-
     objects = MovieManager()
 
     @property
@@ -163,8 +161,7 @@ class Movie(models.Model):
 
     @property
     def recommendations(self):
-        movie_ids = [r.recommended_movie.id for r in Recommendation.objects.filter(based_on_movie=self)]
-        return Movie.objects.filter(id__in=movie_ids)
+        return Movie.objects.filter(recommended_movie__based_on_movie=self)
 
     def get_recommendations(self):
         return Recommendation.objects.create_from_movie(self)

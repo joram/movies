@@ -6,14 +6,14 @@ class Collection(models.Model):
 
     @property
     def movies(self):
-        from movies.models import MovieCollectionMap
+        from movies.models import MovieListMovieMap
         from movies.models import Movie
-        movie_ids = [mcmap.movie.id for mcmap in MovieCollectionMap.objects.filter(collection=self)]
+        movie_ids = [mcmap.movie.id for mcmap in MovieListMovieMap.objects.filter(collection=self)]
         return Movie.objects.filter(id__in=movie_ids)
 
     def add_movie(self, movie):
-        from movies.models import MovieCollectionMap
-        MovieCollectionMap.objects.create(movie=movie, collection=self)
+        from movies.models import MovieListMovieMap
+        MovieListMovieMap.objects.create(movie=movie, collection=self)
 
     class Meta:
         app_label = 'movies'

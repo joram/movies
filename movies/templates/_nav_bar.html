@@ -18,10 +18,19 @@
             <li><a href="{% url 'movies.views.home.home' %}">Home ({{ movie_count }})</a></li>
             <li><a href="{% url 'movies.views.genres.genres' %}">Genres ({{ genre_count }})</a></li>
             <li><a href="{% url 'movies.views.recommendations.recommendations' %}">Recommendations</a></li>
+            <li><a href="{% url 'movies.views.watchlist.watchlist' %}">Watchlist</a></li>
             <li><a href="{% url 'movies.views.search.search' %}">Search</a></li>
           </ul>
         </li>
       </ul>
+
+      <div class="nav navbar-nav text-center">
+        <h2 style="margin-top:8px; margin-bottom:8px; margin-left:50px; color:lightslategrey;">
+          {% for crumb in movie_list.breadcrumbs %}
+            {{ crumb }}
+          {% endfor %}
+        </h2>
+      </div>
 
       <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">

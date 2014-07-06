@@ -14,16 +14,16 @@ class RecommendationManager(models.Manager):
         mdb = MovieDB()
         movie = Movie.objects.get(id=movie_id)
         details = mdb.get_movie_details_by_id(recommended_id)
-	if details:
-        	recommended_movie, created = Movie.objects.create_from_moviedb_id(recommended_id,  details.get('title'), "", "recommended")
+        if details:
+                recommended_movie, created = Movie.objects.create_from_moviedb_id(recommended_id,  details.get('title'), "", "recommended")
 
-        	# create recommendation assosiations
-        	self.create_from_moviedb_info(
-        	    based_on_movie=movie,
-        	    recommended_movie=recommended_movie,
-        	    details=details)
+                # create recommendation assosiations
+                self.create_from_moviedb_info(
+                    based_on_movie=movie,
+                    recommended_movie=recommended_movie,
+                    details=details)
 
-        	return recommended_movie
+                return recommended_movie
 
     def create_from_moviedb_info(self, based_on_movie, recommended_movie, details):
         Recommendation.objects.get_or_create(
@@ -40,8 +40,8 @@ class RecommendationManager(models.Manager):
 
 
 class Recommendation(models.Model):
-    based_on_movie = models.ForeignKey('Movie', related_name='+')
-    recommended_movie = models.ForeignKey('Movie', null=True, blank=True, related_name='+')
+    based_on_movie = models.ForeignKey('Movie', related_name='based_on_movie')
+    recommended_movie = models.ForeignKey('Movie', null=True, blank=True, related_name='recommended_movie')
 
     recommended_id = models.CharField(null=True, blank=True, max_length=200)
     poster_path = models.CharField(null=True, blank=True, max_length=200)
