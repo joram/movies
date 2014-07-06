@@ -106,9 +106,24 @@ class MovieManager(models.Manager):
 
         return movies
 
+    def get_or_create(self, **kwargs):
+        if self.filter(**kwargs).exists():
+            return self.get(**kwargs), False
+        return self.create(**kwargs)
+
+    def create(self, **kwargs):
+        movie = models.Manager.create(self, **kwargs)
+        if movie.name.lower().startswith("the "):
+            movie.name_the_less = movie.name[5:]
+        else:
+            movie.name_the_less = movie.name
+        movie.save()
+        return movie
+
 
 class Movie(models.Model):
     name = models.CharField(null=True, blank=True, max_length=200)
+    name_the_less = models.CharField(null=True, blank=True, max_length=200)
     filename = models.CharField(null=True, blank=True, max_length=200)
 
     moviedb_id = models.CharField(null=True, blank=True, max_length=200)

@@ -35,3 +35,23 @@ h4, h5 {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+
+.right-inner-addon {
+    position: relative;
+}
+.right-inner-addon input {
+    padding-right: 30px;
+}
+.right-inner-addon i {
+    position: absolute;
+    right: 0px;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+
+input#search {
+    height: 50px;
+    font-size:32px;
+    line-height:38px;
+}

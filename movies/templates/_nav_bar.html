@@ -7,21 +7,19 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">
-        Movie Manager
-        <span class="glyphicon glyphicon-film"></span>
-      </a>
+      <span class="glyphicon glyphicon-film"  style="color:white; top:5px; font-size: 2.5em;"></span>
     </div>
     <div class="collapse navbar-collapse">
+
       <ul class="nav navbar-nav">
-        <li {% if page == 'home' %}class="active"{% endif %}>
-            <a href="{% url 'movies.views.home.home' %}">Home ({{ movie_count }})</a>
-        </li>
-        <li {% if page == 'genres' %}class="active"{% endif %}>
-            <a href="{% url 'movies.views.genres.genres' %}">Genres ({{ genre_count }})</a>
-        </li>
-        <li {% if page == 'recommendations' %}class="active"{% endif %}>
-            <a href="{% url 'movies.views.recommendations.recommendations' %}">Recommendations</a>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Movies<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="{% url 'movies.views.home.home' %}">Home ({{ movie_count }})</a></li>
+            <li><a href="{% url 'movies.views.genres.genres' %}">Genres ({{ genre_count }})</a></li>
+            <li><a href="{% url 'movies.views.recommendations.recommendations' %}">Recommendations</a></li>
+            <li><a href="{% url 'movies.views.search.search' %}">Search</a></li>
+          </ul>
         </li>
       </ul>
 
@@ -36,7 +34,7 @@
       </li>
       </ul>
 
-    </div><!--/.nav-collapse -->
+    </div>
   </div>
 </div>
 </div>
