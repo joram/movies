@@ -15,7 +15,7 @@ def _paginated_movies_context(request, movie_list):
                'movie_list': movie_list,
                'all_page_numbers': range(1, int(max_page_index)+1),
                'page_number': page_number,
-               'recommendations': movie_list.recommendations}
+               'recommendations': list(movie_list.recommendations)[:36]}
     return context
 
 
