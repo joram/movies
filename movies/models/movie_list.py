@@ -20,7 +20,7 @@ class MovieList(models.Model):
 
     @property
     def movies(self):
-        return Movie.objects.filter(map_movie__object_id=self.object_id)
+        return Movie.objects.filter(map_movie__object_id=self.object_id).order_by('name_the_less')
         # if self.parent:
         #     qs = self.parent.movies
         # else:
