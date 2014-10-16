@@ -20,7 +20,7 @@ def _paginated_movies_context(request, movies_qs):
     start_movie_index = (page_number-1)*number_per_page
     end_movie_index = page_number*number_per_page
     movies = movies_qs[start_movie_index:end_movie_index]
-    recommendations_qs = Movie.objects.get_recommendations_based_on_movies(movies_qs)
+    recommendations_qs = Movie.objects.get_recommendations_based_on_movies(movies_qs)[:24]
     context = {'page': 'home',
                'movies': movies,
                'movie_list': movies_qs,

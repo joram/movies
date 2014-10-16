@@ -19,7 +19,7 @@ class MovieList(models.Model):
 
     @property
     def movies(self):
-        return Movie.objects.filter(map_movie__object_id=self.object_id).order_by('name_the_less')
+        return Movie.objects.filter(map_movie__object_id=self.id).order_by('name_the_less')
 
     @property
     def breadcrumbs(self):
@@ -40,7 +40,7 @@ class MovieList(models.Model):
 
     @property
     def recommendations(self):
-        return Movie.objects.filter(recommended_movie__based_on_movie__in=self.movies).annotate(num_recommendations=Count('recommended_movie')).order_by('-num_recommendations')
+        return Movie.objects.filter(recommended_movie__based_on_movie__in=self.movies).annotate(num_recommendations=Count('recommended_movie')).order_by('-num_recommendations')[:24]
 
     def random_movie(self, poster_required=True, genre=None):
         movies = self.movies
@@ -58,6 +58,7 @@ class MovieList(models.Model):
         print "no movies with posters"
 
     def add_movie(self, movie):
+        print "adding %s to list: %s" % (movie, self)
         content_type = ContentType.objects.get_for_model(self)
         MovieListMovieMap.objects.get_or_create(movie=movie, object_id=self.id, content_type=content_type)
 
