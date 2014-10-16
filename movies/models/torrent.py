@@ -12,8 +12,8 @@ def _year(movie):
 
 class TorrentManager(models.Manager):
 
-    def __init__(self):
-        super(models.Manager, self).__init__()
+    def __init__(self, *args, **kwargs):
+        super(models.Manager, self).__init__(*args, **kwargs)
         self.transmission = transmissionrpc.Client(
             address=settings.TRANSMISSION_ADDRESS,
             port=settings.TRANSMISSION_PORT,
