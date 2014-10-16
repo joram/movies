@@ -19,7 +19,15 @@ class MovieList(models.Model):
 
     @property
     def movies(self):
-        return Movie.objects.filter(map_movie__object_id=self.id).order_by('name_the_less')
+        movie_list_maps = MovieListMovieMap.objects.filter(object_id=self.id, content_type=ContentType.objects.get_for_model(self))
+        movie_ids = [movie_list_map.movie.id for movie_list_map in movie_list_maps]
+
+        movies_qs = Movie.objects.filter(id__in=movie_ids)
+        if hasattr(self, 'genre'):
+            movies_qs = movies_qs.filter(genres=self.genre)
+
+        movies_qs = movies_qs.order_by('name_the_less')
+        return movies_qs
 
     @property
     def breadcrumbs(self):
