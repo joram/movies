@@ -11,7 +11,8 @@ from recommendation import Recommendation
 from common.models.image import Image
 
 from moviedb import MovieDB
-#from torrents.thePirateBay import ThePirateBay
+
+from movies.models import Torrent
 
 
 class MovieManager(models.Manager):
@@ -20,14 +21,14 @@ class MovieManager(models.Manager):
         super(MovieManager, self).__init__()
         self.mdb = MovieDB()
 
-    def get_or_create_from_filepath(self, filepath, state="available"):
+    def get_or_create_from_filepath(self, filepath):
         if filepath:
             path, filename = os.path.split(filepath)
             movie_name = self.mdb.filename_to_title(filename)
             movie_year = self.mdb.filename_to_year(filename)
             moviedb_id = self.mdb.get_id(movie_name, movie_year)
             if moviedb_id != -1:
-                movie, created = self.create_from_moviedb_id(moviedb_id, movie_name, filename, state)
+                movie, created = self.create_from_moviedb_id(moviedb_id, movie_name, filename)
                 movie.get_poster()
                 return movie, created
         return None, False
@@ -50,20 +51,19 @@ class MovieManager(models.Manager):
             return None, False
 
         movie = Movie.objects.create(
-            state= state,
-            filename= filename,
-            moviedb_id= moviedb_id,
+            filename=filename,
+            moviedb_id=moviedb_id,
 
-            name= details['title'],
-            budget= details['budget'],
-            imdb_id= details['imdb_id'],
-            original_title= details['original_title'],
-            overview= details['overview'],
-            popularity = details['popularity'],
-            release_date= details['release_date'],
-            revenue= details['revenue'],
-            runtime= details['runtime'] if details['runtime'] else 0,
-            tagline= details['tagline'],
+            name=details['title'],
+            budget=details['budget'],
+            imdb_id=details['imdb_id'],
+            original_title=details['original_title'],
+            overview=details['overview'],
+            popularity=details['popularity'],
+            release_date=details['release_date'],
+            revenue=details['revenue'],
+            runtime=details['runtime'] if details['runtime'] else 0,
+            tagline=details['tagline'],
             vote_average=details['vote_average'],
             vote_count=details['vote_count'])
 
@@ -87,12 +87,9 @@ class MovieManager(models.Manager):
         movie.save()
         return movie, True
 
-    def get_recommendations_based_on_movies(self, movies_qs, ignore_available=True):
+    def get_recommendations_based_on_movies(self, movies_qs):
         recommendations = Recommendation.objects.filter(based_on_movie__in=movies_qs)
-        recommended_movies = set([r.recommended_movie for r in recommendations])
-
-        if ignore_available:
-            recommended_movies = [movie for movie in recommended_movies if movie.state != "available"]
+        recommended_movies = set([r.recommended_movie for r in recommendations if r.recommended_movie not in movies_qs])
 
         movies = []
         for recommended_movie in recommended_movies:
@@ -103,7 +100,6 @@ class MovieManager(models.Manager):
             })
         movies = sorted(movies, key=lambda k: k['num_recommendations'])
         movies.reverse()
-
         return movies
 
     def get_or_create(self, **kwargs):
@@ -133,7 +129,6 @@ class Movie(models.Model):
     popularity = models.IntegerField()
     release_date = models.CharField(null=True, blank=True, max_length=200)
     tagline = models.CharField(null=True, blank=True, max_length=200)
-    state = models.CharField(default="available", max_length=200)
     runtime = models.IntegerField()
     revenue = models.IntegerField()
     budget = models.IntegerField()
@@ -169,6 +164,10 @@ class Movie(models.Model):
     def get_recommendation_list(self):
         mdb = MovieDB()
         return mdb.get_similar_movies(self)['results']
+
+    @property
+    def downloading(self):
+        return Torrent.objects.filter(movie=self).exists()
 
     def get_poster(self, image_size=settings.DEFAULT_THUMBNAIL_SIZE):
         """
@@ -213,14 +212,10 @@ class Movie(models.Model):
         app_label = 'movies'
 
     def __unicode__(self):
-        return self.name
-        
- #    def torrent(self):
- #        tpb = ThePirateBay()
- #        search_results = tpb.search(self.name)
- #        if len(search_results)>1:
- #            best_result = search_results[0]
- # #           if best_result['seeds'] > 100:
- #            print "sending torrent to transmision: %s" %  best_result['mag_lnk']
- #            self.state = "downloading"
- #            self.save()
+        unicode_str = ''.join([i if ord(i) < 128 else ' ' for i in self.name])
+        return unicode("%s" % unicode_str)
+
+    def fetch_torrent(self):
+        if Torrent.objects.create_for_movie(self):
+            return True
+        return False

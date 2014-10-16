@@ -9,8 +9,8 @@
 
 <div class="row">
     {% for movie in movies %}
-    <a href="{% url "movies.views.movie.movie" movie.moviedb_id %}">
-    <div class="col-md-3" style="margin-top:10px; margin-bottom:10px;" id="{{ forloop.counter0 }}_{{ movie.name }}">
+    <a href="{% url 'movies.views.movie.movie' movie.moviedb_id %}">
+    <div class="col-md-3" style="margin-top:10px; margin-bottom:10px; min-height:390px;" id="{{ forloop.counter0 }}_{{ movie.name }}">
         {% include '_gridview_movie.html' %}
     </div>
     </a>

@@ -1,0 +1,24 @@
+    function do_action(id){
+        filename = filenames[id];
+        $.post('{% url "movies.views.tools.add_movie" %}', {filename: filename}).done(
+           function(data){
+            var status = $('tr#movie_'+id+"> .status");
+            status.removeClass("btn-info");
+            if(data==""){
+                status.addClass("btn-error glyphicon-remove");
+                console.log(filename);
+            } else {
+                status.addClass("btn-success glyphicon-ok");
+            }
+            next_id = id+1;
+            if(filenames.length >= next_id){
+              scan_file(id+1);
+            }
+          }
+        );
+    }
+
+    function handle_action(element, index, array){
+        console.log("actions["+index+"] = "+element);
+    }
+

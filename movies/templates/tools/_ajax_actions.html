@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <table class="table" style="margin-top:20px;">
+    <thead>
+        <tr>
+            <th>Action</th>
+            <th>Details</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody id="actions_list"></tbody>
+    </table>
+</div>
+
+<script type=text/javascript>
+
+    function get_actions(action_list_url){
+        return $.ajax({
+            url: action_list_url,
+            async: false,
+            success: function(actions){
+                actions_list = $.parseJSON(actions);
+                $.each(actions_list, function(index, action) {
+                    new_row = "<tr class='action' action-url='"+action.action_url+"' action-params='"+JSON.stringify(action.action_params)+"'><td class='bold'>"+action.action+"</td><td>"+action.details+"</td><td class='status btn btn-lg btn-info glyphicon glyphicon-minus'></td></tr>";
+                    $('#actions_list').append(new_row);
+                });
+            }
+        });
+    }
+
+    function set_icon(element, icon_class, colour){
+        element.removeClass('glyphicon-minus')
+        element.removeClass('glyphicon-ok')
+        element.removeClass('glyphicon-remove')
+        element.removeClass('glyphicon-refresh')
+        element.removeClass('red')
+        element.removeClass('green')
+        element.removeClass('blue')
+        element.addClass(icon_class);
+        element.addClass(colour);
+    }
+
+    function do_action(tr){
+        set_icon(tr.find('.status'), 'glyphicon-refresh', 'blue');
+        $.ajax({
+            type: 'POST',
+            url: tr.attr('action-url'),
+            data: $.parseJSON(tr.attr('action-params')),
+            async: false,
+            success: function(actions){
+                set_icon(tr.find('.status'), 'glyphicon-ok', 'green')
+            },
+            error: function(){
+                set_icon(tr.find('.status'), 'glyphicon-remove', 'red')
+            }
+        })
+    }
+
+    function do_actions(){
+        $('#actions_list > tr.action').each(function() {
+            var tr = $(this);
+            setTimeout(function(){do_action(tr)}, 1);
+        });
+    }
+
+    $( document ).ready(function() {
+        actions_url = '{% block actions_list_url %}{% endblock %}';
+        get_actions(actions_url);
+        setTimeout(do_actions, 1);
+    });
+</script>
+{% endblock %}

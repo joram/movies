@@ -53,6 +53,9 @@
             button.removeClass('btn-primary');
             button.addClass('btn-success');
             button.find('span.text').text("Watching");
+            $.ajax({
+                url: '/watchlist/1/add/'+movie_id+'/',
+            })
         });
     }
 

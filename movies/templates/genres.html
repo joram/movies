@@ -3,10 +3,10 @@
 {% block content %}
 <div class="row">
     {% for genre in genres %}
-    <a href="{% url 'movies.views.genres.genre' genre.moviedb_id %}">
-    <div class="col-md-3" style="margin-top: 10px; margin-bottom:10px;" id="{{ forloop.counter0 }}_{{ genre.name }}">
-        {% include '_gridview_genre.html' %}
-    </div>
+    <a href="{% url 'genre' genre.moviedb_id %}">
+        <div class="col-md-3" style="margin-top: 10px; margin-bottom:10px;" id="{{ forloop.counter0 }}_{{ genre.name }}">
+            {% include '_gridview_genre.html' %}
+        </div>
     </a>
     {% endfor %}
 </div>

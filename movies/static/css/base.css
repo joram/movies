@@ -2,6 +2,17 @@ body {
   padding-top: 50px;
   background-color: #999;
 }
+
+.red {
+  color: red;
+}
+.green {
+  color: green;
+}
+.blue {
+  color: blue;
+}
+
 .starter-template {
   padding: 40px 15px;
   text-align: center;
@@ -54,4 +65,8 @@ input#search {
     height: 50px;
     font-size:32px;
     line-height:38px;
+}
+
+.action_buttons > button {
+    width:150px;
 }

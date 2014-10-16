@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.contrib.contenttypes.models import ContentType
 
 from movies.models.movie_list import MovieList
 from movies.models import Watchlist
@@ -11,6 +12,7 @@ class LibraryManager(models.Manager):
     def default(self):
         l, _ = self.get_or_create(name=settings.DEFAULT_LIBRARY_NAME)
         l.object_id = l.id
+        l.content_type = ContentType.objects.get_for_model(l)
         l.save()
         return l
 
