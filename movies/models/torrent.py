@@ -25,14 +25,17 @@ def _torrent_quality(torrent, created, movie):
 
     if torrent.size > 700:
         likes += 1
-    if torrent.seeders > 10:
-        likes += 1
     if created > movie.release_date:
         likes += 1
 
     year = _year(movie)
     if year and str(year) in torrent.title.lower():
         likes += 2
+
+    if torrent.seeders > 10:
+        likes += 1
+    if torrent.seeders <= 0:
+        return 0
 
     return likes
 
@@ -45,8 +48,6 @@ def _find_torrent(movie, minimum_torrent_quality=2):
     best_torrent_quality = None
     for torrent in search:
         (created, current_time) = torrent._created
-        if torrent.seeders <= 0:
-            return
 
         quality = _torrent_quality(torrent, created, movie)
         if not best_torrent or quality > best_torrent_quality:

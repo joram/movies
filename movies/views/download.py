@@ -5,8 +5,9 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 @csrf_exempt
-def fetch_torrent_for_movie(request, movie_id):
-    movie = get_object_or_404(Movie, id=movie_id)
-    if movie.fetch_torrent():
+def fetch_torrent_for_movie(request, moviedb_id):
+    movie, _ = Movie.objects.create_from_moviedb_id(moviedb_id=moviedb_id)
+    torrent = movie.fetch_torrent()
+    if torrent:
         return HttpResponse()
     return HttpResponseNotFound()

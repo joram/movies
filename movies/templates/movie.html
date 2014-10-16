@@ -21,7 +21,7 @@
     }
 
     function download_movie(){
-        url = '/movie/{{movie.id}}/fetch/',
+        url = '/movie/{{movie.moviedb_id}}/fetch/',
         btn = $('#download_button');
         done_btn = $('#downloading_button');
         ajax_button(url, btn, done_btn);
