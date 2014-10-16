@@ -106,3 +106,6 @@ class Torrent(models.Model):
             return unicode(self.transmission.get_torrent(self.transmission_id))
         except KeyError:
             return unicode("Unknown torrent")
+
+    class Meta:
+        app_label = 'movies'
