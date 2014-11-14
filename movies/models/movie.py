@@ -1,7 +1,7 @@
-import os, json
+import os
 
 from django.conf import settings
-from django.db import models
+
 from country import *
 from company import *
 from genre import *
@@ -9,9 +9,7 @@ from language import *
 from movie_image_map import MovieImageMap
 from recommendation import Recommendation
 from common.models.image import Image
-
 from moviedb import MovieDB
-
 from movies.models import Torrent
 
 
@@ -207,6 +205,17 @@ class Movie(models.Model):
 
         print "no poster for: %s" % self.name
         print posters
+
+    @property
+    def status(self):
+        from movie_lists.library import Library
+        if self.downloading:
+            return "downloading"
+        if Library.objects.default.contains(self):
+            return "have"
+        if Library.objects.default.watchlist.contains(self):
+            return "watching"
+        return "available"
 
     class Meta:
         app_label = 'movies'

@@ -2,7 +2,7 @@ import os
 from django.conf import settings
 
 
-def _files_in_dir(path, file_types=['.avi', '.mp4'], ignore_paths=[]):
+def _files_in_dir(path, file_types=['.avi', '.mp4', '.mkv', '.m4v', '.mpg', '.flv', '.wmv', '.mov'], ignore_paths=[]):
     files = []
     for f in os.listdir(path):
 

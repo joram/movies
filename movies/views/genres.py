@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response
 from movies.models import Genre, Library
-from _helpers import movie_list_context
+from _helpers import movie_list_context, paginated_movies_context
 
 
 def genres(request):
@@ -19,6 +19,7 @@ def genres(request):
 def genre(request, genre_id):
     genre = Genre.objects.get(moviedb_id=genre_id)
     movies_qs = Library.objects.default.movies.filter(genres=genre)
-    context = movie_list_context(request, "genres", movies_qs)
+    context = paginated_movies_context(request, movies_qs, "genre: %s" % genre.name)
     context['genre'] = genre
+    print context.keys()
     return render_to_response('genre.html', context)

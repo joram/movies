@@ -1,31 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="row text-center" style="margin-top:10px; border:solid 3px darkslategrey; background-color:lightgrey;">
-    {% for i in all_page_numbers %}
-        <a style="padding:10px; color:darkslategrey;" href="{% url 'movies.views.home.home' %}?page_number={{ i }}">{{ i }}</a>
-    {% endfor %}
-</div>
 
-<div class="row">
-    {% for movie in movies %}
-    <a href="{% url 'movies.views.movie.movie' movie.moviedb_id %}">
-    <div class="col-md-3" style="margin-top:10px; margin-bottom:10px; min-height:390px;" id="{{ forloop.counter0 }}_{{ movie.name }}">
-        {% include '_gridview_movie.html' %}
-    </div>
-    </a>
-    {% endfor %}
-</div>
-
-<div class="row text-center" style="border:solid 3px darkslategrey; background-color:lightgrey;">
-    {% for i in all_page_numbers %}
-        <a style="padding:10px; color:darkslategrey;" href="{% url 'movies.views.home.home' %}?page_number={{ i }}">{{ i }}</a>
-    {% endfor %}
-</div>
-
-<div class="row">
-  <div class="col-md-12">
-    {% include "_recommendations.html" %}
+  <div class="row">
+    <h2 class="text-center">{{ page_title }}</h2>
   </div>
-</div>
+
+  {% include "_page_numbers.html" %}
+
+  <div class="row">
+    {% for movie in movies %}
+      {% include '_gridview_movie.html' with extra_class="col-md-3" %}
+    {% endfor %}
+  </div>
+
+  {% include "_page_numbers.html" %}
+
+  <div class="row">
+    <div class="col-md-12">
+      {% include "_recommendations.html" %}
+    </div>
+  </div>
+
 {% endblock %}

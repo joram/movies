@@ -1,0 +1,83 @@
+
+.grid_movie_wrapper {
+    float: left:
+    position: absolute;
+    height:450px;
+}
+
+.grid_movie {
+    border:solid 3px darkslategrey;
+    background-color: lightgrey;
+    padding: 5px;
+    border-radius: 20px;
+    border:solid 2p;
+}
+
+.grid_movie_title {
+  width:100%;
+  padding-top:2px;
+  border: solid 2px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  padding-left:5px;
+  padding-right:5px;
+  font-size:24px;
+  color: black;
+}
+
+.grid_movie_poster {
+  max-width: 100%;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+
+.grid_movie.have {
+  background-color: green;
+  border-color: darkgreen;
+}
+.grid_movie.have .grid_movie_title {
+  color: darkgreen;
+  border-color: darkgreen;
+  background: lightgreen;
+}
+
+.grid_movie.available {
+  background-color: red;
+  border-color: darkred;
+}
+.grid_movie.available .grid_movie_title {
+  color: darkred;
+  border-color: darkred;
+  background: #FF5555;
+}
+
+.grid_movie.downloading {
+  background-color: orange;
+  border-color: darkorange;
+}
+.grid_movie.downloading .grid_movie_title {
+  color: darkorange;
+  border-color: darkorange;
+  background: #FFBB88;
+}
+
+.grid_movie.downloading {
+  background-color: orange;
+  border-color: darkorange;
+}
+.grid_movie.downloading .grid_movie_title {
+  color: darkorange;
+  border-color: darkorange;
+  background: #FFBB88;
+}
+
+.grid_movie.watching {
+  background-color: blue;
+  border-color: darkblue;
+}
+.grid_movie.watching .grid_movie_title {
+  color: darkblue;
+  border-color: darkblue;
+  background: lightblue;
+}

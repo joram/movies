@@ -1,7 +1,6 @@
 from torrent import Torrent
 from movie import Movie
 
-from moviedb import MovieDB
 from company import Company
 from country import Country
 from genre import Genre

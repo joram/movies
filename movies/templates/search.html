@@ -1,64 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'movies.html' %}
 
 {% block content %}
-<div class="row" style="margin-top: 20px;">
-    <div class="col-md-12" style="margin-top: 3px;">
-        <form method="post">
-            <div class="right-inner-addon">
-                <i class="glyphicon glyphicon-search" style="font-size: 2em;"></i>
-                <input type="search" id="search" name="search" class="form-control" placeholder="Search" {% if search_text %}value="{{ search_text }}"{% endif %} />
-            </div>
-        </form>
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-12" style="margin-top: 3px;">
+            <form method="post">
+                <div class="right-inner-addon">
+                    <i class="glyphicon glyphicon-search" style="font-size: 2em;"></i>
+                    <input type="search" id="search" name="search" class="form-control" value="{{ search_text }}" placeholder="Search"/>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-
-<div class="row" style="margin-top: 20px;">
-    <div  class="col-md-12">
-    <table style="width:100%;">
-    {% for result in results.results %}
-        <tr id="moviedb_id_{{ result.id }}">
-            <td>{{ result.title }}</td>
-            <td>{{ result.release_date }}</td>
-            <td>{{ result.popularity }}</td>
-            <td>
-                <button data_title="{{ result.title }}" data_moviedb_id="{{ result.id }}" class="btn btn-primary pull-right movie">
-                    <span class="text">Add to Watchlist</span>
-                    <i class="glyphicon glyphicon-eye-open" style="top:4px; font-size: 1.5em;"></i>
-                </button>
-            </td>
-        </tr>
-    {% endfor %}
-    </table>
-    </div>
-</div>
-
-
-<script type="text/javascript">
-
-    function add_to_watchlist(id){
-        movie_row = $('tr#moviedb_id_'+id);
-        movie_row.find('td > div.text').text("watching");
-        return false;
-    }
-
-    movie_ids = {{ movie_ids|safe }};
-    for(i=0; i<movie_ids.length; i++){
-        movie_id = movie_ids[i];
-        console.log(movie_id);
-        button = $('button.movie[data_moviedb_id='+movie_id+']');
-        button.click({movie_id:movie_id}, function(event){
-            movie_id = event.data.movie_id;
-            button = $('button.movie[data_moviedb_id='+movie_id+']');
-            console.log('ajaxing adding-to-watchlist '+movie_id);
-            button.removeClass('btn-primary');
-            button.addClass('btn-success');
-            button.find('span.text').text("Watching");
-            $.ajax({
-                url: '/watchlist/1/add/'+movie_id+'/',
-            })
-        });
-    }
-
-</script>
+    {{ block.super }}
 {% endblock %}
 
+{% block recommendations %}{% endblock %}

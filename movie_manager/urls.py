@@ -8,7 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 
-    url(r'^$', 'movies.views.home.home', name='home'),
+    url(r'^$', 'movies.views.search.search', name='home'),
     url(r'^all/$', 'movies.views.home.home', name='all'),
     url(r'^recommendations/$', 'movies.views.recommendations.recommendations', name='recommendations'),
     url(r'^watchlist/$', 'movies.views.watchlist.watchlist', name='watchlist'),

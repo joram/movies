@@ -35,9 +35,10 @@
 
     <div class="col-md-4 text-center">
         <h2>{{ movie.name }}</h2>
-        <img src="{% get_media_prefix %}{{ movie.poster.image }}" style="max-width:100%; max-height:100%; margin:auto; display:block;">
+        <img src="{% if movie.poster.image %}{% get_media_prefix %}{{ movie.poster.image }}{% else %}{% static 'images/placeholder_movie_poster.jpg' %}{% endif %}" style="max-width:100%; max-height:100%; margin:auto; display:block;">
         <div class="action_buttons">
 
+            {% if not in_library %}
             <button id="add_to_watchlist_button" class="btn btn-primary center-block" role="button" onclick="add_to_watchlist();" style="margin-top:10px;{% if watching %} display:none;{% endif %}">
                 Add to Watchlist
                 <i class="glyphicon glyphicon-eye-open" style="top:4px; font-size: 1.5em;"></i>
@@ -58,6 +59,7 @@
                 Downloading
                 <i class="glyphicon glyphicon-download-alt" style="top:4px; font-size: 1.5em;"></i>
             </button>
+            {% endif %}
 
             <button href="#" class="btn btn-primary disabled center-block" role="button" style="margin-top:10px;{% if not in_library %} display:none;{% endif %}">
                 In Library
@@ -92,14 +94,8 @@
 
 </div>
 <div class="row">
-    {% if movie.state == "recommended" %}
-        <div class="col-md-12 text-center"><h2>
-            <a class="btn btn-default" href="{% url 'movies.views.download.download' movie.moviedb_id %}">Download</a>
-        </h2></div>
-    {% else %}
-        <div class="col-md-12">
-            {% include "_recommendations.html" %}
-        </div>
-    {% endif %}
+    <div class="col-md-12">
+        {% include "_recommendations.html" %}
+    </div>
 </div>
 {% endblock %}

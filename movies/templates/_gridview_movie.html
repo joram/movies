@@ -1,7 +1,9 @@
 {% load static %}
-<section class="" style="border:solid 3px darkslategrey; background-color:lightgrey;">
-    <div style="color:darkslategrey; border-bottom:solid 3px darkslategrey; padding-left:5px; padding-right:5px; width:100%;">
-        <h3 class="text-center elipses" style="width:100%; padding-top:2px;">{{ movie.name }}</h3>
-    </div>
-    <img src="{% get_media_prefix %}{{ movie.poster.image }}" style="height:400px; max-width:100%; max-height:100%; margin:auto; display:block;"/>
+<section class="grid_movie_wrapper {{ extra_class }}">
+  <a href="{% url 'movies.views.movie.movie' movie.moviedb_id %}">
+    <section class="grid_movie {{ movie.status }}">
+      <h3 class="grid_movie_title text-center elipses">{{ movie.name }}</h3>
+      <img class="grid_movie_poster" src="{% if movie.poster.image %}{% get_media_prefix %}{{ movie.poster.image }}{% else %}{% static 'images/placeholder_movie_poster.jpg' %}{% endif %}"/>
+    </section>
+  </a>
 </section>

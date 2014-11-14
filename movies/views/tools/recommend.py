@@ -18,11 +18,12 @@ def get_recommendations_for_movie(request):
         return HttpResponseBadRequest()
 
     movie, created = Movie.objects.get_or_create_from_filepath(filepath)
-    recommendations = movie.get_recommendation_list()
-    max_len = min(len(recommendations), max_recommendations)
-    for recommendation in recommendations[:max_len]:
-        recommended_movie, created = Movie.objects.create_from_moviedb_id(moviedb_id=recommendation.get("id"))
-        Recommendation.objects.create_from_moviedb_info(movie, recommended_movie, recommendation)
+    if movie:
+        recommendations = movie.get_recommendation_list()
+        max_len = min(len(recommendations), max_recommendations)
+        for recommendation in recommendations[:max_len]:
+            recommended_movie, created = Movie.objects.create_from_moviedb_id(moviedb_id=recommendation.get("id"))
+            Recommendation.objects.create_from_moviedb_info(movie, recommended_movie, recommendation)
 
     return HttpResponse()
 
