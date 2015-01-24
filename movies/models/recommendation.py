@@ -60,5 +60,6 @@ class Recommendation(models.Model):
 
     class Meta:
         app_label = 'movies'
+	db_table = "movies_recommendation"
 
     objects = RecommendationManager()

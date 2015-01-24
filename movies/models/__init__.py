@@ -1,7 +1,7 @@
-from torrent import Torrent
-from movie import Movie
+from movies.models.torrent import Torrent
+from movies.models.movie import Movie
 
-from company import Company
+from movies.models.company import Company
 from country import Country
 from genre import Genre
 from language import Language

@@ -14,10 +14,7 @@ TRANSMISSION_PASSWORD = ""
 TRANSMISSION_DOWNLOAD_DIR = ""
 
 MOVIEDB_API_KEY = "284cc006f434d590f86b7f10babb5ed8"
-MOVIEDB_WAIT_TIME = 0.5  # 2 hits per second
-
-ROTTEN_TOMATO_API_KEY = "2p5tke2tbvpauarhg66y6s9b"
-ROTTEN_TOMATO_WAIT_TIME = 0.2  # 5 hits per second
+MOVIEDB_WAIT_TIME = 0.5
 
 DEFAULT_THUMBNAIL_SIZE = "w342"
 DEFAULT_LIBRARY_NAME = "My Library"
@@ -31,7 +28,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'db.sqlite3',                    # Or path to database file if using sqlite3.
+        'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite3'),                    # Or path to database file if using sqlite3.
     }
 }
 

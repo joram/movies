@@ -7,6 +7,7 @@ class Genre(models.Model):
 
     class Meta:
         app_label = 'movies'
+        db_table = "movies_genre"
         
     def __unicode__(self):
         return self.name

@@ -109,3 +109,4 @@ class Torrent(models.Model):
 
     class Meta:
         app_label = 'movies'
+        db_table = "movies_torrent"

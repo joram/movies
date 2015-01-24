@@ -46,5 +46,6 @@ class Image(models.Model):
 
     class Meta:
         app_label = 'movies'
+	db_table = "movies_image"
         
     objects = ImageManager()

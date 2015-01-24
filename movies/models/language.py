@@ -7,6 +7,7 @@ class Language(models.Model):
 
     class Meta:
         app_label = 'movies'
+        db_table = "movies_language"
         
     def __unicode__(self):
         return self.name

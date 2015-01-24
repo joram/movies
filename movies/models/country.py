@@ -7,6 +7,7 @@ class Country(models.Model):
 
     class Meta:
         app_label = 'movies'
+        db_table = "movies_country"
 
     def __unicode__(self):
         return self.name

@@ -21,6 +21,7 @@ class MovieListMovieMap(models.Model):
 
     class Meta:
         app_label = 'movies'
+        db_table = "movies_movie_list_movie_map"
 
     def __unicode__(self):
         return unicode("%s - %s" % (self.movie_list, self.movie))

@@ -65,7 +65,13 @@ class MovieManager(models.Manager):
             vote_average=details['vote_average'],
             vote_count=details['vote_count'])
 
-        for company in details['production_companies']:
+        if movie.name.lower().startswith("the "):
+            movie.name_the_less = movie.name[5:]
+        else:
+            movie.name_the_less = movie.name
+        movie.save()
+        
+	for company in details['production_companies']:
             c, _ = Company.objects.get_or_create(moviedb_id=int(company['id']), name=company['name'])
             movie.production_companies.add(c)
 
@@ -105,28 +111,20 @@ class MovieManager(models.Manager):
             return self.get(**kwargs), False
         return self.create(**kwargs)
 
-    def create(self, **kwargs):
-        movie = models.Manager.create(self, **kwargs)
-        if movie.name.lower().startswith("the "):
-            movie.name_the_less = movie.name[5:]
-        else:
-            movie.name_the_less = movie.name
-        movie.save()
-        return movie
 
 
 class Movie(models.Model):
-    name = models.CharField(null=True, blank=True, max_length=200)
-    name_the_less = models.CharField(null=True, blank=True, max_length=200)
-    filename = models.CharField(null=True, blank=True, max_length=200)
+    name = models.CharField(null=True, blank=True, max_length=2000)
+    name_the_less = models.CharField(null=True, blank=True, max_length=2000)
+    filename = models.CharField(null=True, blank=True, max_length=2000)
 
-    moviedb_id = models.CharField(null=True, blank=True, max_length=200)
-    imdb_id = models.CharField(null=True, blank=True, max_length=200)
-    original_title = models.CharField(null=True, blank=True, max_length=200)
-    overview = models.CharField(null=True, blank=True, max_length=200)
+    moviedb_id = models.CharField(null=True, blank=True, max_length=2000)
+    imdb_id = models.CharField(null=True, blank=True, max_length=2000)
+    original_title = models.CharField(null=True, blank=True, max_length=2000)
+    overview = models.CharField(null=True, blank=True, max_length=2000)
     popularity = models.IntegerField()
-    release_date = models.CharField(null=True, blank=True, max_length=200)
-    tagline = models.CharField(null=True, blank=True, max_length=200)
+    release_date = models.CharField(null=True, blank=True, max_length=2000)
+    tagline = models.CharField(null=True, blank=True, max_length=2000)
     runtime = models.IntegerField()
     revenue = models.IntegerField()
     budget = models.IntegerField()
@@ -219,6 +217,7 @@ class Movie(models.Model):
 
     class Meta:
         app_label = 'movies'
+	db_table = 'movies_movie'
 
     def __unicode__(self):
         unicode_str = ''.join([i if ord(i) < 128 else ' ' for i in self.name])

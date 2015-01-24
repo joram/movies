@@ -7,6 +7,7 @@ class MovieImageMap(models.Model):
 
     class Meta:
         app_label = 'movies'
+        db_table = "movies_movie_image_map"
 
     def __unicode__(self):
         return unicode("%s - %s" % (self.movie, self.image))
