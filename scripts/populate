@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+from apps.movies.models import Movie, Library, Recommendation
+import django
+django.setup()
+
+
+def movie_filepaths():
+    with open("./tmp/movies.txt") as f:
+       for line in f.readlines():
+        yield line.replace("\n", "")
+
+
+def build_recommendations(movie, max_recommendations=10):
+    recommendations = movie.get_recommendation_list()
+    max_len = min(len(recommendations), max_recommendations)
+    for recommendation in recommendations[:max_len]:
+        recommended_movie, created = Movie.objects.create_from_moviedb_id(moviedb_id=recommendation.get("id"))
+        Recommendation.objects.create_from_moviedb_info(movie, recommended_movie, recommendation)
+
+
+library = Library.objects.default
+for movie_filepath in movie_filepaths():
+   print movie_filepath
+   movie, created = Movie.objects.get_or_create_from_filepath(movie_filepath)
+   if movie:
+       library.add_movie(movie)
+       build_recommendations(movie)
+

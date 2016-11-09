@@ -5,6 +5,7 @@ data/*
 tmp/*
 media/*
 static/*
+scripts/.activate
 common/static/*
 no_commit*
 ghostdriver.log
