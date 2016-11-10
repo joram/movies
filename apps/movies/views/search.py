@@ -1,7 +1,8 @@
 from django.shortcuts import render_to_response
-from apps.movies.models import Movie
-from moviedb import MovieDB
 from django.views.decorators.csrf import csrf_exempt
+
+from apps.movies.models import Movie
+from services.moviedb import MovieDB
 
 
 def _do_search(search_text):

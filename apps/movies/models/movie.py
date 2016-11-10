@@ -2,15 +2,15 @@ import os
 
 from django.conf import settings
 
-from country import *
+from apps.common.models.image import Image
+from apps.movies.models.movie_image_map import MovieImageMap
+from apps.movies.models.recommendation import Recommendation
+from apps.movies.models.torrent import Torrent
 from company import *
+from country import *
 from genre import *
 from language import *
-from apps.common.models.image import Image
-from apps.movies.models.torrent import Torrent
-from apps.movies.models.recommendation import Recommendation
-from apps.movies.models.movie_image_map import MovieImageMap
-from moviedb import MovieDB
+from services.moviedb import MovieDB
 
 
 class MovieManager(models.Manager):
@@ -112,7 +112,6 @@ class MovieManager(models.Manager):
         return self.create(**kwargs)
 
 
-
 class Movie(models.Model):
     name = models.CharField(null=True, blank=True, max_length=2000)
     name_the_less = models.CharField(null=True, blank=True, max_length=2000)
@@ -198,6 +197,7 @@ class Movie(models.Model):
                     size=image_size,
                     image_url=url,
                     filename=filename)
+                print "got poster, stored: %s" % filename
                 MovieImageMap.objects.create(movie=self, image=image)
                 return
 

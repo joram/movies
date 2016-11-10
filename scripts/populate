@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from apps.movies.models import Movie, Library, Recommendation
+from apps.common.models import Image
+
 import django
 django.setup()
 
@@ -17,10 +19,14 @@ def build_recommendations(movie, max_recommendations=10):
         recommended_movie, created = Movie.objects.create_from_moviedb_id(moviedb_id=recommendation.get("id"))
         Recommendation.objects.create_from_moviedb_info(movie, recommended_movie, recommendation)
 
+Image.objects.all().delete()
+Library.objects.all().delete()
+Recommendation.objects.all().delete()
+Movie.objects.all().delete()
+
 
 library = Library.objects.default
 for movie_filepath in movie_filepaths():
-   print movie_filepath
    movie, created = Movie.objects.get_or_create_from_filepath(movie_filepath)
    if movie:
        library.add_movie(movie)

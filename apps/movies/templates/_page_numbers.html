@@ -1,7 +1,7 @@
 {% if all_page_numbers %}
     <div class="row text-center" style="border:solid 3px darkslategrey; background-color:lightgrey;">
         {% for i in all_page_numbers %}
-            <a style="padding:10px; color:darkslategrey;" href="{% url 'movies.views.home.home' %}?page_number={{ i }}">{{ i }}</a>
+            <a style="padding:10px; color:darkslategrey;" href="{% url 'home' %}?page_number={{ i }}">{{ i }}</a>
         {% endfor %}
     </div>
 {% endif %}

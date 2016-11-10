@@ -1,10 +1,7 @@
-import os, json
 
-from django.conf import settings
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 
-from common.models import Image
 from apps.movies.models import Movie, Library, Recommendation
 
 from helpers import movie_files

@@ -1,13 +1,12 @@
 import os, json
 from urllib import quote, unquote
 
-from django.conf import settings
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 
-from common.models import Image
+from apps.common.models import Image
 from apps.movies.models import Movie, Library
 from helpers import movie_files
 

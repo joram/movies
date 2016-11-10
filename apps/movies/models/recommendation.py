@@ -1,6 +1,6 @@
 from django.db import models
 
-from moviedb import MovieDB
+from services.moviedb import MovieDB
 
 
 class RecommendationManager(models.Manager):

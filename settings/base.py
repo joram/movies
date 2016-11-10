@@ -16,7 +16,6 @@ def get_env(env_name, default=None, required=False):
         return default
     return os.environ.get(env_name)
 
-
 DEFAULT_LIBRARY_NAME = "Serenity Library"
 PROJECT_ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
 MOVIE_ROOT = "/media/silvia/Movies/"

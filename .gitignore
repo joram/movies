@@ -3,8 +3,7 @@
 .idea*
 data/*
 tmp/*
-media/*
-static/*
+apps/movies/static/images/poster/*
 scripts/.activate
 common/static/*
 no_commit*
