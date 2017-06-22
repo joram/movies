@@ -16,9 +16,11 @@ def get_env(env_name, default=None, required=False):
         return default
     return os.environ.get(env_name)
 
+DEBUG = True
 DEFAULT_LIBRARY_NAME = "Serenity Library"
 PROJECT_ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
 MOVIE_ROOT = "/media/silvia/Movies/"
+FAKE_MOVIES_DIR = True
 TRANSMISSION_ADDRESS = get_env("TRANSMISSION_ADDRESS", required=False)
 TRANSMISSION_PORT = get_env("TRANSMISSION_ADDRESS", required=False)
 TRANSMISSION_USERNAME = get_env("TRANSMISSION_ADDRESS", required=False)
@@ -27,5 +29,4 @@ TRANSMISSION_DOWNLOAD_DIR = get_env("TRANSMISSION_ADDRESS", required=False)
 MOVIEDB_API_KEY = get_env("MOVIEDB_API_KEY", required=True)
 MOVIEDB_WAIT_TIME = 0.5
 DEFAULT_THUMBNAIL_SIZE = get_env("TRANSMISSION_ADDRESS", required=False, default="w342")
-
 

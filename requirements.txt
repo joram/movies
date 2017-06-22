@@ -1,13 +1,7 @@
-<<<<<<< HEAD
 Pillow
 ThePirateBay
 transmissionrpc
 requests
-django==1.8
+django==1.11.2
 gevent
-=======
-django==1.7
-ThePirateBay
-transmissionrpc
->>>>>>> 4a46aa45fb7467f3d4211f94f2ec2003e9f95c79
-
+pysqlite

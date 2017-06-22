@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+rm db.sqlite3
+rm apps/movies/migrations/*
+touch apps/movies/migrations/__init__.py
+./manage.py makemigrations movies
+./manage.py migrate
+python -c "import django; django.setup(); from apps.movies.views.tools.rebuild import repopulate_movies; repopulate_movies()"

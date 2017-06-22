@@ -1,9 +1,8 @@
+import uuid
 import random
 
 from django.db import models
 from django.db.models import Count
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
 
 from apps.movies.models import Movie
 from apps.movies.models import MovieListMovieMap
@@ -11,15 +10,13 @@ from apps.movies.models import MovieListMovieMap
 
 class MovieList(models.Model):
     name = models.CharField(null=True, blank=True, max_length=200)
-
-    # generic foreign key to parent since this class is abstract
-    content_type = models.ForeignKey(ContentType, null=True, blank=True)
-    object_id = models.PositiveIntegerField(null=True, blank=True)
-    movie_list = generic.GenericForeignKey('content_type', 'object_id')
+    pub_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     @property
     def movies(self):
-        movies_qs = Movie.objects.filter(map_movie__in=MovieListMovieMap.objects.filter_on_foreign_key(self))
+        mappings = MovieListMovieMap.objects.filter(movie_list_pub_id=self.pub_id)
+        movie_pub_ids = [mapping.movie_pub_id for mapping in mappings]
+        movies_qs = Movie.objects.filter(pub_id__in=movie_pub_ids).exclude(moviedb_id=None)
         if hasattr(self, 'genre'):
             movies_qs = movies_qs.filter(genres=self.genre)
         movies_qs = movies_qs.order_by('name_the_less')
@@ -63,17 +60,23 @@ class MovieList(models.Model):
 
     def add_movie(self, movie):
         print "adding %s to list: %s" % (movie, self)
-        content_type = ContentType.objects.get_for_model(self)
-        MovieListMovieMap.objects.get_or_create(movie=movie, object_id=self.id, content_type=content_type)
+        MovieListMovieMap.objects.get_or_create(
+            movie_pub_id=movie.pub_id,
+            movie_list_pub_id=self.pub_id
+        )
 
     def remove_movie(self, movie):
-        content_type = ContentType.objects.get_for_model(self)
-        movie_list_maps = MovieListMovieMap.objects.filter(movie=movie, object_id=self.id, content_type=content_type)
+        movie_list_maps = MovieListMovieMap.objects.filter(
+            movie_pub_id=movie.pub_id,
+            movie_list_pub_id=self.pub_id
+        )
         movie_list_maps.delete()
 
     def contains(self, movie):
-        content_type = ContentType.objects.get_for_model(self)
-        movie_list_maps = MovieListMovieMap.objects.filter(movie=movie, object_id=self.id, content_type=content_type)
+        movie_list_maps = MovieListMovieMap.objects.filter(
+            movie_pub_id=movie.pub_id,
+            movie_list_pub_id=self.pub_id
+        )
         if movie_list_maps.exists():
             return True
         return False

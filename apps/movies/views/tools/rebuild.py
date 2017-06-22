@@ -20,14 +20,18 @@ def _rescan(request):
     return render_to_response('tools/rebuild.html', context)
 
 
-def rebuild(request):
+def repopulate_movies():
     Movie.objects.all().delete()
     for image in Image.objects.all():
         image.delete()
     Library.objects.all().delete()
     files = movie_files()  # _files_in_dir(settings.MOVIE_ROOT, ignore_paths=[os.path.join(settings.MOVIE_ROOT, "Backup")])
     for filepath in files:
-        Movie.objects.get_or_create_from_filepath(filepath)
+        movie, created = Movie.objects.get_or_create_from_filepath(filepath)
+        Library.objects.default.add_movie(movie)
+
+def rebuild(request):
+    repopulate_movies()
     return _rescan(request)
 
 

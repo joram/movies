@@ -12,18 +12,18 @@ def get_recommendations_for_movie(request):
     if request.method != 'POST':
         return HttpResponseBadRequest()
 
-    filepath = unquote(request.POST.get('path'))
-    max_recommendations = int(request.POST.get('max_recommendations'))
-    if not max_recommendations or not filepath or filepath not in movie_files():
-        return HttpResponseBadRequest()
-
-    movie, created = Movie.objects.get_or_create_from_filepath(filepath)
-    if movie:
-        recommendations = movie.get_recommendation_list()
-        max_len = min(len(recommendations), max_recommendations)
-        for recommendation in recommendations[:max_len]:
-            recommended_movie, created = Movie.objects.create_from_moviedb_id(moviedb_id=recommendation.get("id"))
-            Recommendation.objects.create_from_moviedb_info(movie, recommended_movie, recommendation)
+    # filepath = unquote(request.POST.get('path'))
+    # max_recommendations = int(request.POST.get('max_recommendations'))
+    # if not max_recommendations or not filepath or filepath not in movie_files():
+    #     return HttpResponseBadRequest()
+    #
+    # movie, created = Movie.objects.get_or_create_from_filepath(filepath)
+    # if movie:
+    #     recommendations = movie.get_recommendation_list()
+    #     max_len = min(len(recommendations), max_recommendations)
+    #     for recommendation in recommendations[:max_len]:
+    #         recommended_movie, created = Movie.objects.create_from_moviedb_id(moviedb_id=recommendation.get("id"))
+    #         Recommendation.objects.create_from_moviedb_info(movie, recommended_movie, recommendation)
 
     return HttpResponse()
 

@@ -7,7 +7,7 @@ import re
 import urllib
 
 
-class MovieDB():
+class MovieDB(object):
 
     def part_of_collection(self, name, year=None):
         results = self.search_for_movie(name, year)

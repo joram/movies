@@ -16,10 +16,10 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Movies<b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="{% url 'home' %}">Library</a></li>
-            <li><a href="{% url 'apps.movies.views.genres.genres' %}">Genres</a></li>
-            <li><a href="{% url 'apps.movies.views.recommendations.recommendations' %}">Recommendations</a></li>
-            <li><a href="{% url 'apps.movies.views.watchlist.watchlist' %}">Watchlist</a></li>
-            <li><a href="{% url 'apps.movies.views.search.search' %}">Search</a></li>
+            <li><a href="{% url 'genres' %}">Genres</a></li>
+            <li><a href="{% url 'recommendations' %}">Recommendations</a></li>
+            <li><a href="{% url 'watchlist' %}">Watchlist</a></li>
+            <li><a href="{% url 'search' %}">Search</a></li>
           </ul>
         </li>
       </ul>
@@ -38,7 +38,6 @@
         <ul class="dropdown-menu">
           <li><a href="{% url 'rebuild' %}">Rebuild Database</a></li>
           <li><a href="{% url 'rescan' %}">Update Database</a></li>
-          <li><a href="{% url 'apps.movies.views.tools.rebuild_recommendations' %}">Rebuild Recommendations</a></li>
         </ul>
       </li>
       </ul>

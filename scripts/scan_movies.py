@@ -13,6 +13,11 @@ def build_recommendations():
 
 
 def _files_in_dir(path, file_types=['.avi', '.mp4'], ignore_paths=[]):
+    if settings.FAKE_MOVIES_DIR:
+        with open("tmp/movies.txt") as f:
+            files = f.readlines()
+            return files
+
     files = []
     for f in os.listdir(path):
 

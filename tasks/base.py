@@ -23,6 +23,7 @@ class BaseTask(gevent.Greenlet):
       if end < next_tick:
         remaining = next_tick - end
         gevent.sleep(remaining.total_seconds())
+      gevent.sleep(0)
 
   def do(self):
     print "tick for {} at {}".format(self.__str__(), datetime.datetime.now())

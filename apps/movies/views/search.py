@@ -22,10 +22,15 @@ def search(request):
 
         context["movies"] = []
         for movie_id in [r['id'] for r in _do_search(search_text).get('results', [])]:
-            print "getting movie %s" % movie_id
-            movie, _ = Movie.objects.create_from_moviedb_id(moviedb_id=movie_id)
+            movies = Movie.objects.filter(moviedb_id=movie_id)
+            if movies.count() == 0:
+                movie = Movie.objects.create()
+                movie.get_moviedb_details(moviedb_id=movie_id)
+                movie.get_poster()
+            else:
+                movie = movies[0]
+
             if movie:
-                print movie
                 context["movies"].append(movie)
 
     return render_to_response('search.html', context)

@@ -1,6 +1,6 @@
 {% load static %}
 <section class="grid_movie_wrapper {{ extra_class }}">
-  <a href="{% url 'movie' movie.moviedb_id %}">
+  <a href="{% url 'movie' movie.pub_id_string %}">
     <section class="grid_movie {{ movie.status }}">
       <h3 class="grid_movie_title text-center elipses">{{ movie.name }}</h3>
       <img class="grid_movie_poster" src="{% static movie.poster.static_url %}"/>
