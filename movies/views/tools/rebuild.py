@@ -26,6 +26,9 @@ def rebuild(request):
     for image in Image.objects.all():
         image.delete()
     Library.objects.all().delete()
+    files = movie_files()  # _files_in_dir(settings.MOVIE_ROOT, ignore_paths=[os.path.join(settings.MOVIE_ROOT, "Backup")])
+    for filepath in files:
+        Movie.objects.get_or_create_from_filepath(filepath)
     return _rescan(request)
 
 

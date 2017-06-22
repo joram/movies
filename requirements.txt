@@ -1,0 +1,7 @@
+Pillow
+ThePirateBay
+transmissionrpc
+requests
+django==1.8
+gevent
+

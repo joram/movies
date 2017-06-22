@@ -20,6 +20,12 @@ class MovieManager(models.Manager):
         self.mdb = MovieDB()
 
     def get_or_create_from_filepath(self, filepath):
+        path, filename = os.path.split(filepath)
+        movie = Movie.objects.create(
+            filename=filename
+        )
+
+    def get_metadata(self, filepath):
         if filepath:
             path, filename = os.path.split(filepath)
             movie_name = self.mdb.filename_to_title(filename)

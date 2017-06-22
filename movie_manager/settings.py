@@ -5,7 +5,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 PROJECT_ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
 #MOVIE_ROOT = "/home/joram/Desktop/Movies/"
-MOVIE_ROOT = "/media/silvia/Movies/"
+MOVIE_ROOT = "/home/john/Video/Movies/"
 
 TRANSMISSION_ADDRESS = ""
 TRANSMISSION_PORT = ""
@@ -154,3 +154,4 @@ LOGGING = {
         },
     }
 }
+

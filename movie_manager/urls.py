@@ -6,6 +6,21 @@ from django.conf.urls.static import static
 from django.contrib import admin
 admin.autodiscover()
 
+
+from tasks.add_movie import AddMovies
+from tasks.base import BaseTask
+TASKS = [
+  AddMovies,
+  BaseTask,
+]
+
+print "### STATING TASKS ###"
+for task_class in TASKS:
+  task = task_class()
+  print "STARTING: {}".format(task.__str__())
+  task.start()
+
+
 urlpatterns = patterns('',
 
     url(r'^$', 'movies.views.search.search', name='home'),

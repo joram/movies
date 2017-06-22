@@ -41,7 +41,7 @@ def _torrent_quality(torrent, created, movie):
 
 
 def _find_torrent(movie, minimum_torrent_quality=2):
-    t = TPB('https://thepiratebay.se')
+    t = TPB('https://thepiratebay.org')
     search = t.search("%s %s" % (movie.name, _year(movie)), category=CATEGORIES.VIDEO)
     search.order(ORDERS.SEEDERS.DES).page(1)
     best_torrent = None
