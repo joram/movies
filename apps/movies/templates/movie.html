@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block includes %}
+<script type="text/javascript">
+    function ajax_button(url, btn, new_btn){
+        $.ajax({
+            url: url,
+            success: function(){
+                btn.hide();
+                new_btn.show();
+            }
+        })
+    }
+
+    function add_to_watchlist(){
+        url = '/watchlist/1/add/{{movie.moviedb_id}}/',
+        btn = $('#add_to_watchlist_button');
+        done_btn = $('#in_watchlist_button');
+        ajax_button(url, btn, done_btn);
+    }
+
+    function download_movie(){
+        url = '/movie/{{movie.moviedb_id}}/fetch/',
+        btn = $('#download_button');
+        done_btn = $('#downloading_button');
+        ajax_button(url, btn, done_btn);
+    }
+
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-md-4 text-center">
+        <h2>{{ movie.name }}</h2>
+        <img src="{% static movie.poster.static_url %}" style="max-width:100%; max-height:100%; margin:auto; display:block;">
+        <div class="action_buttons">
+
+            {% if not in_library %}
+            <button id="add_to_watchlist_button" class="btn btn-primary center-block" role="button" onclick="add_to_watchlist();" style="margin-top:10px;{% if watching %} display:none;{% endif %}">
+                Add to Watchlist
+                <i class="glyphicon glyphicon-eye-open" style="top:4px; font-size: 1.5em;"></i>
+            </button>
+
+            <button href="#" id="in_watchlist_button" class="btn btn-primary disabled center-block" role="button" style="margin-top:10px; {% if not watching %} display:none;{% endif %}">
+                Watching
+                <i class="glyphicon glyphicon-eye-open" style="top:4px; font-size: 1.5em;"></i>
+            </button>
+
+
+            <button id="download_button" class="btn btn-primary center-block" role="button" onclick="download_movie();" style="margin-top:10px;{% if movie.downloading %} display:none;{% endif %}">
+                Download Now
+                <i class="glyphicon glyphicon-download-alt" style="top:4px; font-size: 1.5em;"></i>
+            </button>
+
+            <button id="downloading_button" class="btn btn-primary center-block disabled" style="margin-top:10px;{% if not movie.downloading %} display:none;{% endif %}">
+                Downloading
+                <i class="glyphicon glyphicon-download-alt" style="top:4px; font-size: 1.5em;"></i>
+            </button>
+            {% endif %}
+
+            <button href="#" class="btn btn-primary disabled center-block" role="button" style="margin-top:10px;{% if not in_library %} display:none;{% endif %}">
+                In Library
+            </button>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h3>overview</h3>
+        <div>{{ movie.overview }}</div>
+
+        <h3>tagline</h3>
+        <div>{{ movie.tagline }}</div>
+
+        <h3>state</h3>
+        <div>{{ movie.state }}</div>
+
+        <h3>runtime</h3>
+        <div>{{ movie.runtiem }}</div>
+
+        <h3>revenue</h3>
+        <div>{{ movie.revenue }}</div>
+
+        <h3>budget</h3>
+        <div>{{ movie.budget }}</div>
+
+        <h3>genres</h3>
+        {% for genre in movie.genres.all %}
+        <div>{{ genre }}</div>
+        {% endfor %}
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        {% include "_recommendations.html" %}
+    </div>
+</div>
+{% endblock %}

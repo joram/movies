@@ -1,13 +1,16 @@
 #!/usr/bin/python
 from django.conf import settings
-import json, os
-from movies.models import Movie,  Recommendation
-from common.models import Image
+
+import os
+from apps.movies.models import Movie, Library
+
+DEFAULT_LIBRARY = settings.get_default_library()
 
 
 def build_recommendations():
     for movie in Movie.objects.filter(state='available'):
         Movie.objects.get_recommendations(movie)
+
 
 def _files_in_dir(path, file_types=['.avi', '.mp4'], ignore_paths=[]):
     files = []
