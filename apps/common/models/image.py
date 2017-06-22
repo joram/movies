@@ -52,7 +52,6 @@ class Image(models.Model):
     @property
     def static_url(self):
         url = str(self.image) if self.image else self.DEFAULT_STATIC_IMAGE_URL
-        print "static_url: %s" % url
         return url
 
     class Meta:

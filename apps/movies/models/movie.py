@@ -109,7 +109,12 @@ class Movie(models.Model):
 
         results = []
         for recommendation in recommendations[:max_len]:
-            recommended_movie, created = Movie.objects.get_or_create(name=recommendation.get("title"))
+            qs = Movie.objects.filter(name=recommendation.get("title"))
+            if qs.count() > 0:
+                recommended_movie = qs[0]
+            else:
+                recommended_movie, created = Movie.objects.get_or_create(name=recommendation.get("title"))
+
             if not recommended_movie.filename:
                 recommended_movie.filename = ""
                 recommended_movie.save()
@@ -136,6 +141,16 @@ class Movie(models.Model):
         poster sizes include: w92, w154, w185, w342, w500, w780, original
         """
         from apps.common.models.image import Image
+
+        filename = "moviedb_%s_poster_%s.jpg" % (self.moviedb_id, 0)
+        filepath = "apps/movies/static/images/poster/w342/{}".format(filename)
+        if os.path.exists(filepath):
+            image = Image.objects.create(
+                image_type='poster',
+                size=image_size,
+                image_url="???",
+                filename=filename)
+            MovieImageMap.objects.create(movie=self, image=image)
 
         mdb = MovieDB()
         images = mdb.get_image_list(self.moviedb_id)
@@ -170,21 +185,14 @@ class Movie(models.Model):
                 return
 
         print "no poster for: %s" % self.name
-        print posters
 
     def get_moviedb_details(self, moviedb_id=-1):
         movie_year = MDB.filename_to_year(self.filename)
         if moviedb_id == -1:
             moviedb_id = MDB.get_id(self.name, movie_year)
         if moviedb_id == -1:
-            print "can't find"
+            print "can't find movie: {}".format(self.filename)
             return
-
-        # return pre-existing movie
-        # if Movie.objects.filter(moviedb_id=moviedb_id).exclude(pub_id=self.pub_id).exists():
-        print Movie.objects.filter(moviedb_id=moviedb_id).exclude(pub_id=self.pub_id).count()
-        #     print "already exists"
-        #     return
 
         # create new one
         details = MDB.get_movie_details_by_id(moviedb_id)

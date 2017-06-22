@@ -84,6 +84,7 @@ class MovieDB(object):
         if year:
             title = title.replace(year, "")
             title = title.strip(" ")
+        title = title.encode("ascii", "ignore")
 
         params = [
             ('api_key', settings.MOVIEDB_API_KEY),
@@ -92,7 +93,7 @@ class MovieDB(object):
         if year:
             params.append(('year', year))
 
-        query_url = "http://api.themoviedb.org/3/search/movie?%s" % urllib.urlencode(params)
+        query_url = u"http://api.themoviedb.org/3/search/movie?%s" % urllib.urlencode(params)
 
         results = self.do_api_call(stored_filename, query_url)
         return results

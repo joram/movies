@@ -19,7 +19,7 @@ FULL_BAD_FILENAMES = ['Akira p1.ogm', 'Akira p2.ogm', 'Batman 1966', 'Batman1989
 class GetMovieMetadata(BaseTask):
 
     SECONDS = 1
-    MAX_MOVIES = 5
+    MAX_MOVIES = 10
 
     def __str__(self):
         return u"AddMovies"
@@ -38,9 +38,11 @@ class GetMovieMetadata(BaseTask):
             try:
                 movie.get_metadata()
                 gevent.sleep(0)
-            except:
-                BAD_FILENAMES.append(movie.name)
-                print BAD_FILENAMES
+            except Exception as e:
+                print e
+                raise
+                # BAD_FILENAMES.append(movie.name)
+                # print BAD_FILENAMES
 
 
 class GetMovieRecommendations(BaseTask):
@@ -65,5 +67,4 @@ class GetMovieRecommendations(BaseTask):
             recommendations = movie.get_recommendations()
             for m in recommendations:
                 m.get_poster()
-
-            gevent.sleep(0)
+                gevent.sleep(0)
